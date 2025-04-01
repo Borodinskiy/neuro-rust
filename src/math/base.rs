@@ -1,3 +1,11 @@
+pub fn pow(mut num: f64, times: i32) -> f64 {
+	for i in 0..times {
+		num *= num;
+	}
+	num
+}
+
+
 pub fn ele_mul(num: f64, vec: [f64; 3]) -> [f64; 3] {
 	let mut res = [0.0; 3];
 

@@ -1,5 +1,5 @@
-use crate::vectormath::weight::{w_sum, vec_mat_mul};
-use crate::vectormath::base::ele_mul;
+use crate::math::weight::{w_sum, vec_mat_mul};
+use crate::math::base::ele_mul;
 
 pub fn winchance(input: [f64; 3], weights: [f64; 3]) -> f64 {
 	w_sum(input, weights)

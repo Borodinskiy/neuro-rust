@@ -1,29 +1,32 @@
-mod vectormath;
+mod math;
 mod neuro;
 
+use math::base::pow;
 use neuro::{matchstat, multistat, winchance};
 
 fn main() {
-	let weights_wc = [ 0.1, 0.2, 0.0 ];
+	let mut weight = 0.5;
+	let input = 0.5;
+	let goal_prediction = 0.8;
 
-	let weights_am = [ 0.3, 0.2, 0.9 ];
+	let step_amount = 0.001;
 
-	let weights_ml = [
-		//# games % win # cheerleaders
-		[  0.1,    0.1, -0.3 ], // traumas?
-		[  0.1,    0.2,  0.0 ], // win?
-		[  0.0,    1.3,  0.1 ]  // sadness?
-	];
+	for _ in 0..1101 {
+		let prediction = input * weight;
+		let error = pow(prediction - goal_prediction, 2);
 
-	let toes    = [ 8.5, 9.5, 9.9, 9.0 ];  // Num games
-	let wlrec   = [ 0.65, 0.8, 0.8, 0.9 ]; // % Win
-	let nfans   = [ 1.2, 1.3, 0.5, 1.0 ];  // Cool dudes count
+		println!("Error: {} Prediction: {}", error, prediction);
 
-	let wc = winchance([ toes[0], wlrec[0], nfans[0] ], weights_wc);
-	let am = matchstat(wlrec[0], weights_am);
-	let ml = multistat([ toes[0], wlrec[0], nfans[0] ], weights_ml);
+		let up_prediction = input * (weight + step_amount);
+		let up_error = pow(goal_prediction - up_prediction, 2);
 
-	println!("Prediction for winchance is {}!", wc);
-	println!("Prediction for aftermatch statistic:\nTraumas: {}\nWin chance: {}\nSadness chance: {}", am[0], am[1], am[2]);
-	println!("Prediction for multistat is:\nTraumas: {}\nWin chance: {}\nSadness chance: {}", ml[0], ml[1], ml[2]);
+		let down_prediction = input * (weight + step_amount);
+		let down_error = pow(goal_prediction - down_prediction, 2);
+
+		if down_error < up_error {
+			weight = weight - step_amount;
+		} else {
+			weight = weight + step_amount;
+		}
+	}
 }
